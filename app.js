@@ -9,6 +9,16 @@ let year = currentYear;
 let month = currentMonth;
 monthAndYear.textContent = currentMonth + " " + currentYear;
 
+window.addEventListener("keyup", (event) => {
+  if (event.ctrlKey && event.key === "ArrowRight") {
+    nextMonth();
+  }
+
+  if (event.ctrlKey && event.key === "ArrowLeft") {
+    prevMonth();
+  }
+});
+
 nextButton.addEventListener("click", () => {
   nextMonth();
 });

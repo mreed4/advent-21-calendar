@@ -49,3 +49,8 @@ div {
   height: 60px;
   width: 60px;
 }
+
+.next img,
+.previous img {
+  cursor: pointer;
+}
