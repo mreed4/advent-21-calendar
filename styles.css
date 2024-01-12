@@ -43,11 +43,22 @@ div {
   font-weight: bold;
 }
 
-.today {
+.calendar-body {
+  grid-column: span 7;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(60px, 1fr));
+  grid-gap: 30px;
+}
+
+.day.today {
   background: #ffd200;
   border-radius: 50%;
   height: 60px;
   width: 60px;
+}
+
+.day.empty {
+  color: #ccc;
 }
 
 .next img,
