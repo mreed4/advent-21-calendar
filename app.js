@@ -3,8 +3,21 @@ const prevButton = document.querySelector(".previous img");
 const calendarBody = document.querySelector(".calendar-body");
 let monthAndYear = document.querySelector(".month-and-year");
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const months = [
+  /* */
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 let currentDay = new Date().getDate();
 let currentMonth = months[new Date().getMonth()];
@@ -13,28 +26,10 @@ let currentYear = new Date().getFullYear();
 let year = currentYear;
 let month = currentMonth;
 
-console.log("Current day: " + currentDay);
-
-monthAndYear.textContent = currentMonth + " " + currentYear;
-drawCalendarBody(currentMonth, currentYear);
-
-window.addEventListener("keyup", (event) => {
-  if (event.ctrlKey && event.key === "ArrowRight") {
-    nextMonth();
-  }
-
-  if (event.ctrlKey && event.key === "ArrowLeft") {
-    prevMonth();
-  }
-});
-
-nextButton.addEventListener("click", () => {
-  nextMonth();
-});
-
-prevButton.addEventListener("click", () => {
-  prevMonth();
-});
+(function initialDraw() {
+  monthAndYear.textContent = currentMonth + " " + currentYear;
+  drawCalendarBody(currentMonth, currentYear);
+})();
 
 function nextMonth() {
   if (month === "December") {
@@ -62,43 +57,65 @@ function prevMonth() {
 
 function drawCalendarBody(month, year) {
   const firstDayNum = new Date(year, months.indexOf(month), 1).getDay();
-  const firstDay = weekdays[firstDayNum];
   const daysInMonth = 32 - new Date(year, months.indexOf(month), 32).getDate();
+  const daysInPrevMonth = 32 - new Date(year, months.indexOf(month) - 1, 32).getDate();
 
   calendarBody.innerHTML = ""; // Clear calendar body
 
   for (let i = 0; i < 42; i++) {
+    /* */
+    const isInNextMonth = i >= daysInMonth + firstDayNum;
+    const isInPrevMonth = i < firstDayNum;
+    const isWithinMonth = !isInNextMonth && !isInPrevMonth;
+    const isCurrentDay = i === currentDay + firstDayNum - 1 && month === currentMonth && year === currentYear;
+
+    // Create divs, add classes
+
     const div = document.createElement("div");
     div.classList.add("day");
 
-    // Add empty class to days before and after current month
-
-    if (i < firstDayNum || i >= daysInMonth + firstDayNum) {
+    if (!isWithinMonth) {
       div.classList.add("empty");
     }
 
-    // Add today class to current day
-
-    if (i === currentDay + firstDayNum - 1 && month === currentMonth && year === currentYear) {
+    if (isCurrentDay) {
       div.classList.add("today");
     }
 
-    // Add number to day div
+    // Add day numbers to divs
 
-    if (i >= firstDayNum && i < daysInMonth + firstDayNum) {
+    if (isWithinMonth) {
       div.textContent = i - firstDayNum + 1;
     }
 
-    // Add number to day div for next month
-
-    if (i >= daysInMonth + firstDayNum) {
+    if (isInNextMonth) {
       div.textContent = i - daysInMonth - firstDayNum + 1;
     }
 
+    if (isInPrevMonth) {
+      div.textContent = daysInPrevMonth - firstDayNum + i + 1;
+    }
+
+    // Append divs to calendar body
+
     calendarBody.appendChild(div);
   }
-
-  console.log("Month: " + month);
-  console.log("First day of the month is: " + firstDay);
-  console.log("Days in month: " + daysInMonth);
 }
+
+window.addEventListener("keyup", (event) => {
+  if (event.ctrlKey && event.key === "ArrowRight") {
+    nextMonth();
+  }
+
+  if (event.ctrlKey && event.key === "ArrowLeft") {
+    prevMonth();
+  }
+});
+
+nextButton.addEventListener("click", () => {
+  nextMonth();
+});
+
+prevButton.addEventListener("click", () => {
+  prevMonth();
+});
