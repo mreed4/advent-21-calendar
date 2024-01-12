@@ -31,6 +31,8 @@ let month = currentMonth;
   drawCalendarBody(currentMonth, currentYear);
 })();
 
+// Helper functions
+
 function nextMonth() {
   if (month === "December") {
     month = "January";
@@ -55,6 +57,8 @@ function prevMonth() {
   monthAndYear.textContent = month + " " + year;
 }
 
+// Main function
+
 function drawCalendarBody(month, year) {
   const firstDayNum = new Date(year, months.indexOf(month), 1).getDay();
   const daysInMonth = 32 - new Date(year, months.indexOf(month), 32).getDate();
@@ -67,12 +71,18 @@ function drawCalendarBody(month, year) {
     const isInNextMonth = i >= daysInMonth + firstDayNum;
     const isInPrevMonth = i < firstDayNum;
     const isWithinMonth = !isInNextMonth && !isInPrevMonth;
-    const isCurrentDay = i === currentDay + firstDayNum - 1 && month === currentMonth && year === currentYear;
 
-    // Create divs, add classes
+    let isCurrentDay = i === currentDay + firstDayNum - 1; // -1 because of zero indexing
+    const isCurrentMonth = month === currentMonth;
+    const isCurrentYear = year === currentYear;
+    isCurrentDay = isCurrentDay && isCurrentMonth && isCurrentYear;
+
+    // Create divs, add class
 
     const div = document.createElement("div");
     div.classList.add("day");
+
+    // Conditionally add additional classes
 
     if (!isWithinMonth) {
       div.classList.add("empty");
@@ -82,7 +92,7 @@ function drawCalendarBody(month, year) {
       div.classList.add("today");
     }
 
-    // Add day numbers to divs
+    // Conditionally add day number to divs
 
     if (isWithinMonth) {
       div.textContent = i - firstDayNum + 1;
@@ -101,6 +111,8 @@ function drawCalendarBody(month, year) {
     calendarBody.appendChild(div);
   }
 }
+
+// Event listeners
 
 window.addEventListener("keyup", (event) => {
   if (event.ctrlKey && event.key === "ArrowRight") {
